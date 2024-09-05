@@ -49,7 +49,7 @@ from typing import List, Union, Dict, Any
 from jiwer import transforms as tr
 from jiwer.transformations import wer_default, cer_default
 import sys
-sys.path.append("/home/eugan/repos/scripts/jiwer/jiwer/process")
+#sys.path.append("/home/eugan/repos/scripts/jiwer/jiwer/process")
 #from b_process import process_words, process_characters, process_per
 from process import process_words, process_characters, process_pier
 #from jiwer.process import process_words, process_characters, process_per

@@ -595,7 +595,7 @@ def tag_poi_words(text, scd_language, matrix_lang=None, fixedtags=False):
 
     if not fixedtags:
         if (res["eng_words"]+res["mixed_words"]+res["rest"]) != len(words): 
-            print("WTF"); print(ASD)
+            raise ValueError("eng_words + mixed_words+ rest should equal total word")
         elif res["eng_words"] > res["rest"]:
             res = tag_words(orig_words, switch=True)
 
