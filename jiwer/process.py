@@ -34,6 +34,7 @@ from jiwer import transforms as tr
 from jiwer.transformations import wer_default, cer_default
 import re
 import inflect
+import regex
 
 __all__ = [
     "AlignmentChunk",
