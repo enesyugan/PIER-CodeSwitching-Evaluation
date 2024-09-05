@@ -335,7 +335,7 @@ def process_characters(
     )
 
 
-def process_per(
+def process_pier(
     reference: Union[str, List[str]],
     hypothesis: Union[str, List[str]],
     reference_transform: Union[tr.Compose, tr.AbstractTransform] = cer_default,
@@ -638,8 +638,19 @@ def determine_matrix_language(reference, split_hyphen, scd_language):
     else:
         return "eng"
     
+
+
+def add_space_before_punctuation(text):
+    # Regular expression to match punctuation that should have a space before it
+    pattern = re.compile(r'(?<!\s)([,.!?;:，。！？；：、،؟])')
+    # Substitute the matched punctuation with a space before it
+    return pattern.sub(r' \1', text)
+
 def extract_indices(text, split_hyphen, scd_language, matrix_lang, fixedtags):
-    if scd_language != None: text = tag_poi_words(text, scd_language, matrix_lang="cmn", fixedtags=True)
+    if scd_language != None: 
+        text = tag_poi_words(text, scd_language, matrix_lang="cmn", fixedtags=True)
+    else:
+        text = add_space_before_punctuation(text)
     #print(text)
     # Correct the incorrect annotation pattern by removing the space before '>'
     corrected_text = re.sub(r'<tag\s+([^>]+)\s*>', r'<tag \1>', text)

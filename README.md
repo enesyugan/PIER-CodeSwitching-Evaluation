@@ -93,7 +93,7 @@ If you use this project in your work, please cite it as follows:
 
 ## Contact
 
-If you have any questions or issues, feel free to [open an issue](https://github.com/enesyugan/PIER-CodeSwitching-Evaluation/issues) or reach out to me at [enes.uganl@kit.edu].
+If you have any questions or issues, feel free to [open an issue](https://github.com/enesyugan/PIER-CodeSwitching-Evaluation/issues) or reach out to me at [enes.ugan@kit.edu].
 
 
 ## License

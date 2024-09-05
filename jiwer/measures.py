@@ -51,7 +51,7 @@ from jiwer.transformations import wer_default, cer_default
 import sys
 sys.path.append("/home/eugan/repos/scripts/jiwer/jiwer/process")
 #from b_process import process_words, process_characters, process_per
-from process import process_words, process_characters, process_per
+from process import process_words, process_characters, process_pier
 #from jiwer.process import process_words, process_characters, process_per
 
 __all__ = [
@@ -405,7 +405,7 @@ def cer(
     else:
         return output.cer
 
-def per(
+def pier(
     reference: Union[str, List[str]] = None,
     hypothesis: Union[str, List[str]] = None,
     reference_transform: Union[tr.Compose, tr.AbstractTransform] = wer_default,
@@ -453,7 +453,7 @@ def per(
         truth_transform=truth_transform,
         hypothesis_transform=hypothesis_transform,
     )
-    output = process_per(
+    output = process_pier(
         reference, hypothesis, reference_transform, hypothesis_transform, scd_language, split_hyphen
         )
 
