@@ -42,22 +42,23 @@ pip install -r requirements.txt
 
 Currently we only support mixing with English and X (X being any other language).
 
-The most simple use-case is computing the word error rate between two strings:
+The most simple use-case is computing the word error rate between two strings.
 
-
-For Languages pairs that are both 
+For languages that share the same latin script.
 ```python
 import sys
-sys.path.append(<path of the this code>)
+sys.path.append(<path of this code>)
 from measures import pier
 
-#(Did you download the file?)
-reference = "Hast du das <tag File> <tag gedownloadet>?"
-hypothesis = "Hast du das File geload et"
+# (Yea, that thing with the bots i don't believe it.)
+reference = "Ja, das mit den <tag Bots> glaube ich nicht."
+hypothesis = "Ja, das mit den Pots glaub ich nicht."
 
 error = pier(reference, hypothesis)
 
 ```
+This example was taken from [Paper 1: "DECM: Evaluating Bilingual ASR Performance on a Code-switching/mixing Benchmark"](https://aclanthology.org/2024.lrec-main.400.pdf).
+
 
 For languages with differen writing scripts such as Arabic or Mandarin, Japanese taggs are not needed.
 For Han/Kanji, Hiragana, Katakana spaces are inserted between characters.
@@ -77,6 +78,8 @@ hypothesis = "是從cam那邊拿來的是從marc拿來的之後"
 error = pier(reference, hypothesis, scd_language="cmn")
 
 ```
+This example was taken from [Paper 2: "SEAME:a mandarin-english code-switching speech corpus in south-east asia."](https://www.isca-archive.org/interspeech_2010/lyu10_interspeech.pdf).
+
 ## Citations
 
 If you use this project in your work, please cite it as follows:
