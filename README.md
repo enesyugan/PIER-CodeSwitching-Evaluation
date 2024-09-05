@@ -57,7 +57,7 @@ hypothesis = "Ja, das mit den Pots glaub ich nicht."
 error = pier(reference, hypothesis)
 
 ```
-This example was taken from [Paper 1: "DECM: Evaluating Bilingual ASR Performance on a Code-switching/mixing Benchmark"](https://aclanthology.org/2024.lrec-main.400.pdf).
+This example was taken from ["DECM: Evaluating Bilingual ASR Performance on a Code-switching/mixing Benchmark"](https://aclanthology.org/2024.lrec-main.400.pdf).
 
 
 For languages with differen writing scripts such as Arabic or Mandarin, Japanese taggs are not needed.
@@ -78,7 +78,7 @@ hypothesis = "是從cam那邊拿來的是從marc拿來的之後"
 error = pier(reference, hypothesis, scd_language="cmn")
 
 ```
-This example was taken from [Paper 2: "SEAME:a mandarin-english code-switching speech corpus in south-east asia."](https://www.isca-archive.org/interspeech_2010/lyu10_interspeech.pdf).
+This example was taken from ["SEAME:a mandarin-english code-switching speech corpus in south-east asia."](https://www.isca-archive.org/interspeech_2010/lyu10_interspeech.pdf).
 
 ## Citations
 
