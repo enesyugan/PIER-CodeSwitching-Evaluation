@@ -47,13 +47,15 @@ The most simple use-case is computing the word error rate between two strings:
 
 For Languages pairs that are both 
 ```python
-from jiwer import wer
+import sys
+sys.path.append(<path of the this code>)
+from measures import pier
 
 #(Did you download the file?)
 reference = "Hast du das <tag File> <tag gedownloadet>?"
 hypothesis = "Hast du das File geload et"
 
-error = per(reference, hypothesis)
+error = pier(reference, hypothesis)
 
 ```
 
@@ -63,14 +65,16 @@ For Han/Kanji, Hiragana, Katakana spaces are inserted between characters.
 The matrix language will be determined on corpus level and the PIER performance is calculated on the embedded langauge.
 
 ```python
-from jiwer import wer
+import sys
+sys.path.append(<path of the this code>)
+from measures import pier
 
 #(Did you download the file?)
 reference = "我是从 camp 那边拿来的自从 mark 那时拿来了之后"
 hypothesis = "是從cam那邊拿來的是從marc拿來的之後"
 
 
-error = per(reference, hypothesis)
+error = pier(reference, hypothesis)
 
 ```
 ## Citations
