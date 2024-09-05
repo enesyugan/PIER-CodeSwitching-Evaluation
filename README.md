@@ -69,12 +69,12 @@ import sys
 sys.path.append(<path of the this code>)
 from measures import pier
 
-#(Did you download the file?)
+
 reference = "我是从 camp 那边拿来的自从 mark 那时拿来了之后"
 hypothesis = "是從cam那邊拿來的是從marc拿來的之後"
 
 
-error = pier(reference, hypothesis)
+error = pier(reference, hypothesis, scd_language="cmn")
 
 ```
 ## Citations
