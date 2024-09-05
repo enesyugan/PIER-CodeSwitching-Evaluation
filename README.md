@@ -23,6 +23,7 @@ _For example:_
 2. [Usage](#usage)
 3. [License](#license)
 4. [Citations](#citations)
+4. [Contact](#contact)
 
 ---
 
@@ -72,14 +73,30 @@ hypothesis = "是從cam那邊拿來的是從marc拿來的之後"
 error = per(reference, hypothesis)
 
 ```
+## Citations
 
+If you use this project in your work, please cite it as follows:
+
+```bibtex
+@article{your-citation-key,
+  author    = {Your Name},
+  title     = {Title of Your Work},
+  journal   = {Journal Name},
+  volume    = {Volume Number},
+  number    = {Issue Number},
+  pages     = {Page Numbers},
+  year      = {Year},
+  publisher = {Publisher},
+  doi       = {DOI}
+}
+```
 
 ## Contact
 
 If you have any questions or issues, feel free to [open an issue](https://github.com/enesyugan/PIER-CodeSwitching-Evaluation/issues) or reach out to me at [enes.uganl@kit.edu].
 
 
-## Licence
+## License
 
 The jiwer package is released under the `Apache License, Version 2.0`.
 
