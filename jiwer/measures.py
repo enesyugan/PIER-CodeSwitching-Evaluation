@@ -48,7 +48,11 @@ from typing import List, Union, Dict, Any
 
 from jiwer import transforms as tr
 from jiwer.transformations import wer_default, cer_default
-from jiwer.process import process_words, process_characters
+import sys
+sys.path.append("/home/eugan/repos/scripts/jiwer/jiwer/process")
+#from b_process import process_words, process_characters, process_per
+from process import process_words, process_characters, process_per
+#from jiwer.process import process_words, process_characters, process_per
 
 __all__ = [
     "wer",
@@ -401,6 +405,59 @@ def cer(
     else:
         return output.cer
 
+def per(
+    reference: Union[str, List[str]] = None,
+    hypothesis: Union[str, List[str]] = None,
+    reference_transform: Union[tr.Compose, tr.AbstractTransform] = wer_default,
+    hypothesis_transform: Union[tr.Compose, tr.AbstractTransform] = wer_default,
+    truth: Union[str, List[str]] = None,
+    truth_transform: Union[tr.Compose, tr.AbstractTransform] = None,
+	scd_language: str=None,
+	split_hyphen: bool=False,
+) -> float:
+    """
+    Calculate the point of interest error rate (WER) between one or more reference and
+    hypothesis sentences.
+
+    Args:
+        reference: The reference sentence(s) tagged with PoI words <tag word>
+        hypothesis: The hypothesis sentence(s)
+        reference_transform: The transformation(s) to apply to the reference string(s)
+        hypothesis_transform: The transformation(s) to apply to the hypothesis string(s)
+        truth: Deprecated, renamed to `reference`
+        truth_transform: Deprecated, renamed to `reference_transform`
+        scd_language: Only works with English as embedded and languages not using latin script such as Arabic (ara), or Mandarin (cmn), Japanese (jap), as second language
+        split_hyphen: If hyphen should be replaced by space
+
+    Deprecated:
+        Arguments `truth` and `truth_transform` have been renamed to respectively
+        `reference` and `reference_transform`. Therefore, the keyword arguments
+         `truth` and `truth_transform` will be removed in the next release.
+         At the same time, `reference` and `reference_transform` will lose their
+         default value.
+
+    Returns:
+        (float): The word error rate of the given reference and
+                 hypothesis sentence(s).
+    """
+    (
+        reference,
+        hypothesis,
+        reference_transform,
+        hypothesis_transform,
+    ) = _deprecate_truth(
+        reference=reference,
+        hypothesis=hypothesis,
+        truth=truth,
+        reference_transform=reference_transform,
+        truth_transform=truth_transform,
+        hypothesis_transform=hypothesis_transform,
+    )
+    output = process_per(
+        reference, hypothesis, reference_transform, hypothesis_transform, scd_language, split_hyphen
+        )
+
+    return output
 
 def _deprecate_truth(
     reference: Union[str, List[str]],
