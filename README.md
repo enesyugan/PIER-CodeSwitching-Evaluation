@@ -14,7 +14,7 @@ _For example:_
 ## Features
 
 - **Feature 1**: Calculating PIER.
-- **Feature 2**: You can proide tagged refernce such as ["This is a <tag reference> sentence."]
+- **Feature 2**: You can proide tagged refernce such as ["This is a \<tag reference\> sentence."]
 - **Feature 3**: You can specifiy second language next to english and we automatically determine matrix language and points-of-interest (words of embedded language).
 
 ## Table of Contents
