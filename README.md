@@ -21,10 +21,8 @@ _For example:_
 
 1. [Installation](#installation)
 2. [Usage](#usage)
-3. [Examples](#examples)
-4. [Contributing](#contributing)
-5. [License](#license)
-6. [Citations](#citations)
+3. [License](#license)
+4. [Citations](#citations)
 
 ---
 
@@ -33,24 +31,53 @@ _For example:_
 Clone this repository and install the dependencies:
 
 ```bash
-git clone https://github.com/<your-github-username>/<your-repo-name>.git
-cd <your-repo-name>
+git clone https://github.com/enesyugan/PIER-CodeSwitching-Evaluation.git
+cd jiwer
 pip install -r requirements.txt
 
-
+```
 
 ## Usage
 
+Currently we only support mixing with English and X (X being any other language).
+
 The most simple use-case is computing the word error rate between two strings:
+
+
+For Languages pairs that are both 
+```python
+from jiwer import wer
+
+#(Did you download the file?)
+reference = "Hast du das <tag File> <tag gedownloadet>?"
+hypothesis = "Hast du das File geload et"
+
+error = per(reference, hypothesis)
+
+```
+
+For languages with differen writing scripts such as Arabic or Mandarin, Japanese taggs are not needed.
+For Han/Kanji, Hiragana, Katakana spaces are inserted between characters.
+
+The matrix language will be determined on corpus level and the PIER performance is calculated on the embedded langauge.
 
 ```python
 from jiwer import wer
 
-reference = "hello world"
-hypothesis = "hello duck"
+#(Did you download the file?)
+reference = "我是从 camp 那边拿来的自从 mark 那时拿来了之后"
+hypothesis = "是從cam那邊拿來的是從marc拿來的之後"
 
-error = wer(reference, hypothesis)
+
+error = per(reference, hypothesis)
+
 ```
+
+
+## Contact
+
+If you have any questions or issues, feel free to [open an issue](https://github.com/enesyugan/PIER-CodeSwitching-Evaluation/issues) or reach out to me at [enes.uganl@kit.edu].
+
 
 ## Licence
 
