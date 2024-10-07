@@ -47,7 +47,7 @@ The most simple use-case is computing the word error rate between two strings.
 For languages that share the same latin script.
 ```python
 import sys
-sys.path.append(<path of this code>)
+sys.path.append(<path of repo code>)
 from measures import pier
 
 # (Yea, that thing with the bots i don't believe it.)
