@@ -63,7 +63,8 @@ This example was taken from ["DECM: Evaluating Bilingual ASR Performance on a Co
 For languages with differen writing scripts such as Arabic or Mandarin, Japanese taggs are not needed.
 For Han/Kanji, Hiragana, Katakana spaces are inserted between characters.
 
-The matrix language will be determined on corpus level and the PIER performance is calculated on the embedded langauge.
+<!--The matrix language will be determined on corpus level and the PIER performance is calculated on the embedded langauge.-->
+The matrix language will be set to the non-latin script and the PIER performance is calculated on the embedded langauge.
 
 ```python
 import sys
