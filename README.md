@@ -9,7 +9,7 @@
 A brief description of your project. Explain what it does, why it matters, and any key details that make it unique.
 
 _For example:_
-> This repository is a fork of the [jiwer](https://github.com/jitsi/jiwer) library with added functionalities and modifications for X task. The project is designed to calculate word error rates (WER) and other metrics for evaluating automatic speech recognition (ASR) systems.
+> This repository is a fork of the [jiwer](https://github.com/jitsi/jiwer) library with added functionalities and modifications for PIER task. It enables calculating Point of Inerest Error Rate (PIER). The usage is the same as in WER/CER by jiwer.
 
 ## Features
 
