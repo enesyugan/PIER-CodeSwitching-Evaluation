@@ -361,7 +361,8 @@ def process_pier(
     num_poi_words, num_other_words = [], []
     reference_notag = []
 
-    matrix_lang = determine_matrix_language(reference, split_hyphen, scd_language) if scd_language!= None else None
+    #matrix_lang = determine_matrix_language(reference, split_hyphen, scd_language) if scd_language!= None else None
+    matrix_lang = scd_language if scd_language!= None else None
     print(f"MATRIX LANG: {matrix_lang}")
     for ref in reference:
         poi_ind, o_ind = extract_indices(ref, split_hyphen, scd_language,  matrix_lang, fixedtags=True)
@@ -402,9 +403,20 @@ def process_pier(
     counter = 0
     H, oH = 0, 0
 
+    debug= 0
     for reference_sentence, hypothesis_sentence, poi_idxs, other_idxs in zip(ref_as_chars, hyp_as_chars, poi_indices, other_indices):
         poiWords += len(poi_idxs)
         otherWords += len(other_idxs)
+        if len(poi_idxs) <= 0 or len(other_idxs) <= 0:
+            counter +=1
+            continue
+        #if len(poi_idxs) <= 0: counter += 1; continue
+        #if len(other_idxs) <= 0: print(reference[counter]); print(counter); counter+= 1; continue
+        #print(ref_transformed[debug])
+        #print(poi_idxs)
+        #print(other_idxs)
+
+        debug+=1
         total_len = len(reference_notag[counter].split())
 
         edit_ops = rapidfuzz.distance.Levenshtein.editops(
@@ -426,13 +438,13 @@ def process_pier(
             oD += deletions
             oH += hits
         counter += 1
-
+    print(f"EEEEEE: {counter}")
     PER = ((I+D+S)/(H+S+D))*100 if (H+S+D) > 0 else 0.
     oPER = ((oI+oD+oS)/(oH+oS+oD))*100 if (oH+oS+oD) > 0 else 0.
-    
+    print(f"OTHER: {otherWords}")
     res = {
         "poi": {
-            "PER": PER,
+            "PIER": PER,
             "insertions": I,
             "deletions": D,
             "substitutions":S,
@@ -440,7 +452,7 @@ def process_pier(
             "poiWords": (H+S+D),
             },
         "rest": {
-            "PER": oPER,
+            "PIER": oPER,
             "insertions": oI,
             "deletions": oD,
             "substitutions": oS,
@@ -544,26 +556,32 @@ def tokenize_for_mer(text):
 
 def tag_words(words, switch=False):
     latin_containing_pattern = r'\b\w*[a-zA-Z]+\w*\b'
-    latin_pattern_with_numbers = r'\b[a-zA-Z0-9]+(?:\'[a-zA-Z0-9]+)?\b'
+    latin_pattern = r'\b[a-zA-Z]+(?:\'[a-zA-Z]+)?\b'
 
     num_words = len(words)
     eng_words = 0
+    eng_chars = 0
     mixed_words = 0
+    mixed_chars = 0
     rest = 0
+    rest_chars = 0
 
     for i, word in enumerate(words):
-        if re.match(latin_pattern_with_numbers, word):
+        if re.match(latin_pattern, word):
             eng_words += 1
+            eng_chars += len(word)
             if not re.search(r'<tag\s.*?>.*?</eng>', word) and not switch:
                 words[i] = f'<tag {word}>'
 
         elif re.match(latin_containing_pattern, word):
             #eng_words += 1
             mixed_words += 1
+            mixed_chars += len(word)
             if not re.search(r'<tag\s.*?>.*?</eng>', word):
                 words[i] = f'<tag {word}>'
         else:
             rest += 1
+            rest_chars += len(word)
             if switch and not re.search(r'<tag\s.*?>.*?</eng>', word):
                 words[i] = f'<tag {word}>'
                 
@@ -573,6 +591,9 @@ def tag_words(words, switch=False):
         "eng_words": eng_words,
         "mixed_words": mixed_words,
         "rest": rest,
+        "eng_chars": eng_chars,
+        "mixed_chars": mixed_chars,
+        "rest_chars": rest_chars,
         }
     return res
 
@@ -592,6 +613,8 @@ def tag_poi_words(text, scd_language, matrix_lang=None, fixedtags=False):
 
     if res["eng_words"] +res["mixed_words"] == len(words):
         return text
+    if res["rest"] == len(words):
+        return text
 
     if not fixedtags:
         if (res["eng_words"]+res["mixed_words"]+res["rest"]) != len(words): 
@@ -606,38 +629,62 @@ def tag_poi_words(text, scd_language, matrix_lang=None, fixedtags=False):
 def determine_matrix_language(reference, split_hyphen, scd_language):
     corpus_poi_indices=list()
     corpus_other_indices = list()
+    eng_words, mixed_words, scd_lang_words = 0,0,0
     for ref in reference:
-        text = tag_poi_words(ref, scd_language, fixedtags=True)
-        corrected_text = re.sub(r'<tag\s+([^>]+)\s*>', r'<tag \1>', text)
-        pattern = re.compile(r'<tag (.*?)>')
-        poi_indices = []
-        tags = 0
-        if split_hyphen:
-        	all_words = text.replace("-", " ").split()
-        else:
-        	all_words = text.split()
-        
-        for match in pattern.finditer(text):
-            poi_text = match.group(1)
-            if split_hyphen:
-                start_index = len(text[:match.start()].replace("-", " ").split()) -tags
-                words_in_poi = poi_text.replace("-", " ").split()
-                end_index = start_index + len(words_in_poi)
-            else:
-                start_index = len(text[:match.start()].split()) - tags
-                end_index = start_index + len(poi_text.split())
-            poi_indices.extend(range(start_index, end_index))
-            tags += 1
-        
-        all_indices = list(range(len(all_words)-tags))
-        other_indices = [index for index in all_indices if index not in poi_indices]
-        corpus_poi_indices.extend(all_indices)
-        corpus_other_indices.extend(other_indices)
+        if scd_language == "cmn" or scd_language == "jap":
+            #ref = " ".join(tokenize_for_mer(ref))
+            res = tag_words(tokenize_for_mer(ref))
+            eng_words += res["eng_words"]
+            mixed_words += res["mixed_words"]
+            scd_lang_words += res["rest"]
 
-    if len(corpus_poi_indices) >= len(corpus_other_indices):
+        else:
+            res = tag_words(ref.split())
+            eng_words += res["eng_chars"]
+            mixed_words += res["mixed_chars"]
+            scd_lang_words += res["rest_chars"]
+       # print(ref)
+      #  text = tag_poi_words(ref, scd_language, fixedtags=True)
+      #  corrected_text = re.sub(r'<tag\s+([^>]+)\s*>', r'<tag \1>', text)
+      #  pattern = re.compile(r'<tag (.*?)>')
+      #  poi_indices = []
+      #  tags = 0
+      #  if split_hyphen:
+      #  	all_words = text.replace("-", " ").split()
+      #  else:
+      #  	all_words = text.split()
+      #  
+      #  for match in pattern.finditer(text):
+      #      poi_text = match.group(1)
+      #      if split_hyphen:
+      #          start_index = len(text[:match.start()].replace("-", " ").split()) -tags
+      #          words_in_poi = poi_text.replace("-", " ").split()
+      #          end_index = start_index + len(words_in_poi)
+      #      else:
+      #          start_index = len(text[:match.start()].split()) - tags
+      #          end_index = start_index + len(poi_text.split())
+      #      poi_indices.extend(range(start_index, end_index))
+      #      tags += 1
+      #  
+      #  all_indices = list(range(len(all_words)-tags))
+      #  other_indices = [index for index in all_indices if index not in poi_indices]
+      #  corpus_poi_indices.extend(all_indices)
+      #  corpus_other_indices.extend(other_indices)
+
+    print(eng_words)
+    print(mixed_words)
+    print(scd_lang_words)
+    print("==")
+    print(len(corpus_poi_indices))
+    print(len(corpus_other_indices))
+    if scd_lang_words >= eng_words:
         return scd_language
     else:
         return "eng"
+   # if len(corpus_poi_indices) >= len(corpus_other_indices):
+   #     return scd_language
+   # else:
+   #     return "eng"
     
 
 
@@ -648,10 +695,12 @@ def add_space_before_punctuation(text):
     return pattern.sub(r' \1', text)
 
 def extract_indices(text, split_hyphen, scd_language, matrix_lang, fixedtags):
+    #print(text)
     if scd_language != None: 
-        text = tag_poi_words(text, scd_language, matrix_lang="cmn", fixedtags=True)
-    else:
-        text = add_space_before_punctuation(text)
+        ##matrix_lang="cmn"
+        text = tag_poi_words(text, scd_language, matrix_lang=matrix_lang, fixedtags=True)
+    #else:
+     #   text = add_space_before_punctuation(text)
     #print(text)
     # Correct the incorrect annotation pattern by removing the space before '>'
     corrected_text = re.sub(r'<tag\s+([^>]+)\s*>', r'<tag \1>', text)
@@ -677,7 +726,8 @@ def extract_indices(text, split_hyphen, scd_language, matrix_lang, fixedtags):
     
     all_indices = list(range(len(all_words)-tags))
     other_indices = [index for index in all_indices if index not in poi_indices]
-    #print(f"p: {poi_indices} o: {other_indices}")
+   # print(text)
+   # print(f"p: {poi_indices} o: {other_indices}")
    # if len(poi_indices) > len(other_indices):  
    #     print(text)
        # poi = poi_indices.copy()
