@@ -5,17 +5,15 @@
 [![Stars](https://img.shields.io/github/stars/enesyugan/PIER-CodeSwitching-Evaluation)](https://github.com/<your-github-username>/<your-repo-name>/stargazers)
 
 ## Overview
+PIER (Point-of-Interest Error Rate) is a variant of Word-Error-Rate tailored for code-switching ASR: rather than scoring all words, PIER first tags a set of “points of interest” (e.g. the embedded-language tokens), computes the usual alignment between reference and hypothesis, then counts only the edit operations whose reference positions lie in that set, normalizing by the number of points of interest to yield an error rate focused purely on the code-switched segments.
 
-A brief description of your project. Explain what it does, why it matters, and any key details that make it unique.
-
-_For example:_
 > This repository is a fork of the [jiwer](https://github.com/jitsi/jiwer) library with added functionalities and modifications for PIER task. It enables calculating Point of Inerest Error Rate (PIER). The usage is the same as in WER/CER by jiwer.
 
 ## Features
 
 - **Feature 1**: Calculating PIER.
-- **Feature 2**: You can proide tagged refernce such as ["This is a \<tag reference\> sentence."]
-- **Feature 3**: You can specifiy second language next to english and we automatically determine matrix language and points-of-interest (words of embedded language).
+- **Feature 2**: You can provide tagged refernce such as ["This is a \<tag reference\> sentence."]
+- **Feature 3**: You can specifiy second language next to english and we automatically determine english (latin) as points-of-interest (words of embedded language).
 
 ## Table of Contents
 
@@ -40,14 +38,15 @@ pip install -r requirements.txt
 
 ## Usage
 
-Currently we only support mixing with English and X (X being any other language).
+Currently we only support mixing with English and X (X being any other language) for automatic tagging.
+Otherwise you can provide tagged words it will calculate PIER for those words as well.
 
-The most simple use-case is computing the word error rate between two strings.
+The most simple use-case is computing the Point-of-Interest Error Rate between two strings.
 
 For languages that share the same latin script.
 ```python
 import sys
-sys.path.append(<path of repo code>)
+sys.path.append(<path of repo code>/jiwer)
 from measures import pier
 
 # (Yea, that thing with the bots i don't believe it.)
@@ -68,7 +67,7 @@ The matrix language will be set to the non-latin script and the PIER performance
 
 ```python
 import sys
-sys.path.append(<path of the this code>)
+sys.path.append(<path of the this code>/jiwer)
 from measures import pier
 
 
@@ -86,16 +85,13 @@ This example was taken from ["SEAME:a mandarin-english code-switching speech cor
 If you use this project in your work, please cite it as follows:
 
 ```bibtex
-@article{your-citation-key,
-  author    = {Your Name},
-  title     = {Title of Your Work},
-  journal   = {Journal Name},
-  volume    = {Volume Number},
-  number    = {Issue Number},
-  pages     = {Page Numbers},
-  year      = {Year},
-  publisher = {Publisher},
-  doi       = {DOI}
+@inproceedings{ugan2025pier,
+  title={Pier: A novel metric for evaluating what matters in code-switching},
+  author={Ugan, Enes Yavuz and Pham, Ngoc-Quan and B{\"a}rmann, Leonard and Waibel, Alex},
+  booktitle={ICASSP 2025-2025 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},
+  pages={1--5},
+  year={2025},
+  organization={IEEE}
 }
 ```
 
