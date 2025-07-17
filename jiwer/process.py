@@ -438,10 +438,10 @@ def process_pier(
             oD += deletions
             oH += hits
         counter += 1
-    print(f"EEEEEE: {counter}")
+    #print(f"EEEEEE: {counter}")
     PER = ((I+D+S)/(H+S+D))*100 if (H+S+D) > 0 else 0.
     oPER = ((oI+oD+oS)/(oH+oS+oD))*100 if (oH+oS+oD) > 0 else 0.
-    print(f"OTHER: {otherWords}")
+    #print(f"OTHER: {otherWords}")
     res = {
         "poi": {
             "PIER": PER,
