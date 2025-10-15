@@ -1,8 +1,8 @@
 # <Your Project Name> 
 
-[![License](https://img.shields.io/github/license/enesyugan/PIER-CodeSwitching-Evaluation)](https://github.com/<your-github-username>/<your-repo-name>/blob/master/LICENSE)
-[![Issues](https://img.shields.io/github/issues/enesyugan/PIER-CodeSwitching-Evaluation)](https://github.com/<your-github-username>/<your-repo-name>/issues)
-[![Stars](https://img.shields.io/github/stars/enesyugan/PIER-CodeSwitching-Evaluation)](https://github.com/<your-github-username>/<your-repo-name>/stargazers)
+[![License](https://img.shields.io/github/license/enesyugan/PIER-CodeSwitching-Evaluation)](https://github.com/enesyugan/PIER-CodeSwitching-Evaluation/blob/master/LICENSE)
+[![Issues](https://img.shields.io/github/issues/enesyugan/PIER-CodeSwitching-Evaluation)](https://github.com/enesyugan/PIER-CodeSwitching-Evaluation/issues)
+[![Stars](https://img.shields.io/github/stars/enesyugan/PIER-CodeSwitching-Evaluation)](https://github.com/enesyugan/PIER-CodeSwitching-Evaluation/stargazers)
 
 ## Overview
 PIER (Point-of-Interest Error Rate) is a variant of Word-Error-Rate tailored for code-switching ASR: rather than scoring all words, PIER first tags a set of “points of interest” (e.g. the embedded-language tokens), computes the usual alignment between reference and hypothesis, then counts only the edit operations whose reference positions lie in that set, normalizing by the number of points of interest to yield an error rate focused purely on the code-switched segments.
@@ -31,7 +31,7 @@ Clone this repository and install the dependencies:
 
 ```bash
 git clone https://github.com/enesyugan/PIER-CodeSwitching-Evaluation.git
-cd jiwer
+cd PIER-CodeSwitching-Evaluation
 pip install -r requirements.txt
 
 ```
@@ -60,23 +60,42 @@ This example was taken from ["DECM: Evaluating Bilingual ASR Performance on a Co
 
 
 For languages with differen writing scripts such as Arabic or Mandarin, Japanese taggs are not needed.
-For Han/Kanji, Hiragana, Katakana spaces are inserted between characters.
+For Han/Kanji, Hiragana, Katakana spaces should be inserted between characters.
 
 <!--The matrix language will be determined on corpus level and the PIER performance is calculated on the embedded langauge.-->
 The matrix language will be set to the non-latin script and the PIER performance is calculated on the embedded langauge.
 
 ```python
+import regex
+import inflect
+import re
 import sys
 sys.path.append(<path of the this code>/jiwer)
 from measures import pier
 
+def tokenize_for_mer(text):
+  # Match: single Han char | number | simple English word (+ optional apostrophe chunk)
+  reg_range = r"[\u4e00-\ufaff]|[0-9]+|[a-zA-Z]+\'*[a-z]*"
+  matches = re.findall(reg_range, text, re.UNICODE)
+  p = inflect.engine()
+  res = []
+  for item in matches:
+    try:
+      # Convert pure numerics that are not Han
+      temp = p.number_to_words(item) if (item.isnumeric() and len(regex.findall(r'\p{Han}+', item)) == 0) else item
+    except:
+      temp = item
+    res.append(temp)
+  return res
 
 reference = "我是从 camp 那边拿来的自从 mark 那时拿来了之后"
 hypothesis = "是從cam那邊拿來的是從marc拿來的之後"
 
+# Tokenize & normalize for PIER
+reference = " ".join(tokenize_for_mer(reference)) 
+hypothesis = " ".join(tokenize_for_mer(hypothesis)) 
 
 error = pier(reference, hypothesis, scd_language="cmn")
-
 ```
 This example was taken from ["SEAME:a mandarin-english code-switching speech corpus in south-east asia."](https://www.isca-archive.org/interspeech_2010/lyu10_interspeech.pdf).
 
